@@ -122,7 +122,7 @@ public class MsPowerPointDecoder
                     // Append the end of slide marker
                     if (withEndOfSlideMarker)
                     {
-                        sb.AppendLine(this._endOfSlideMarkerTemplate.Replace("{number}", slideNumber.ToString()));
+			sb.AppendLine(this._endOfSlideMarkerTemplate.Replace("{number}", $"{slideNumber}", StringComparison.OrdinalIgnoreCase));
                     }
                 }
             }
