@@ -88,17 +88,13 @@ public class MsPowerPointDecoder
             foreach (SlideId slideId in slideIds)
             {
                 slideNumber++;
-#pragma warning disable CA1508 // code taken from official MS docs
                 if ((string?)slideId.RelationshipId is string relationshipId
                     && presentationPart.GetPartById(relationshipId) is SlidePart slidePart
                     && slidePart != null
                     && slidePart.Slide?.Descendants<Text>().ToList() is List<Text> texts and { Count: > 0 })
-#pragma warning restore CA1508
                 {
                     // Check if the slide is hidden and whether to skip it
-#pragma warning disable CS8625 // the property is null when the slide is visible
-                    if (skipHiddenSlides && slidePart.Slide.Show! != null) { continue; }
-#pragma warning restore CS8625
+                    if (skipHiddenSlides && slidePart.Slide.Show != null) { continue; }
 
                     var slideContent = new StringBuilder();
                     for (var i = 0; i < texts.Count; i++)
@@ -117,7 +113,7 @@ public class MsPowerPointDecoder
                     // Prepend slide number before the slide text
                     if (withSlideNumber)
                     {
-                        sb.AppendLine(this._slideNumberTemplate.Replace("{number}", $"{slideNumber}", StringComparison.OrdinalIgnoreCase));
+                        sb.AppendLine(this._slideNumberTemplate.Replace("{number}", slideNumber.ToString()));
                     }
 
                     sb.Append(slideContent);
@@ -126,7 +122,7 @@ public class MsPowerPointDecoder
                     // Append the end of slide marker
                     if (withEndOfSlideMarker)
                     {
-                        sb.AppendLine(this._endOfSlideMarkerTemplate.Replace("{number}", $"{slideNumber}", StringComparison.OrdinalIgnoreCase));
+                        sb.AppendLine(this._endOfSlideMarkerTemplate.Replace("{number}", slideNumber.ToString()));
                     }
                 }
             }
